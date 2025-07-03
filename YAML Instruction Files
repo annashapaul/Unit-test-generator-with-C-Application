@@ -1,0 +1,26 @@
+......instructions/gen_tests.yaml......
+instruction: >
+  Generate unit tests for the provided C++ files using Google Test framework.
+rules:
+  - Each function in the C++ file should have at least one test.
+  - Use proper test case naming.
+  - Place test files in the 'tests' directory.
+  - Only use standard and required testing libraries.
+
+....instructions/refine_tests.yaml.....
+instruction: >
+  Refine the unit tests for better quality and coverage.
+rules:
+  - Remove duplicate tests.
+  - Ensure required libraries are included.
+  - Improve test case edge coverage.
+  - Use meaningful test names.
+  - Do not generate redundant tests.
+
+....instructions/fix_build.yaml....
+instruction: >
+  Fix build errors in the provided C++ and test files using the compiler logs.
+rules:
+  - Do not change function signatures unless required.
+  - Fix includes and linker errors.
+  - Ensure compatibility with Google Test and g++.
