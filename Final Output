@@ -1,0 +1,25 @@
+Run:
+python3 scripts/generate_tests.py
+python3 scripts/refine_tests.py
+python3 scripts/build_and_debug.py
+python3 scripts/coverage_analysis.py
+Review coverage_report/index.html.
+
+Write a report:
+
+markdown
+# Unit Test Generator Report
+
+## Test Coverage Summary
+- File: example.cpp
+- Functions tested: 8/9
+- Coverage: 87.4%
+
+## Issues Fixed
+- Added missing includes
+- Removed test duplicates
+- Fixed linker errors
+
+## Improvements
+- Added edge case handling
+- Named tests consistently
