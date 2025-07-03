@@ -1,0 +1,52 @@
+......scripts/generate_tests.py........
+
+import os, yaml
+from utils import call_llm_api, save_test_file
+
+with open("instructions/gen_tests.yaml") as f:
+    prompt = yaml.safe_load(f)
+
+for cpp_file in os.listdir("src"):
+    if cpp_file.endswith(".cpp") or cpp_file.endswith(".h"):
+        with open(f"src/{cpp_file}") as code_file:
+            code = code_file.read()
+            response = call_llm_api(prompt["instruction"], code)
+            save_test_file(response, cpp_file)
+
+
+
+import os, yaml
+from utils import call_llm_api, save_test_file
+
+with open("instructions/refine_tests.yaml") as f:
+    prompt = yaml.safe_load(f)
+
+for test_file in os.listdir("tests"):
+    with open(f"tests/{test_file}") as tf:
+        test_code = tf.read()
+        response = call_llm_api(prompt["instruction"], test_code)
+        save_test_file(response, test_file)
+
+
+
+import subprocess, yaml
+from utils import call_llm_api
+
+build_cmd = ["cmake", "-S", ".", "-B", "build"]
+make_cmd = ["cmake", "--build", "build"]
+
+try:
+    subprocess.run(build_cmd, check=True)
+    subprocess.run(make_cmd, check=True)
+except subprocess.CalledProcessError as e:
+    log = e.stderr.decode() if e.stderr else "Build failed"
+    with open("instructions/fix_build.yaml") as f:
+        prompt = yaml.safe_load(f)
+    # Read src + test files
+    all_code = ""
+    for folder in ["src", "tests"]:
+        for file in os.listdir(folder):
+            with open(f"{folder}/{file}") as fcode:
+                all_code += fcode.read() + "\n"
+    fixed_code = call_llm_api(prompt["instruction"], all_code + "\nBuild Log:\n" + log)
+    # Save fixed code (implementation may separate files again)
