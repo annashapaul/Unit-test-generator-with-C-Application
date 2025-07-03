@@ -1,0 +1,7 @@
+import subprocess
+
+def run_coverage():
+    subprocess.run(["lcov", "--capture", "--directory", "build", "--output-file", "coverage.info"])
+    subprocess.run(["genhtml", "coverage.info", "--output-directory", "coverage_report"])
+
+run_coverage()
