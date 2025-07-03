@@ -1,0 +1,16 @@
+import openai  # or your local LLM wrapper
+
+def call_llm_api(prompt, code):
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # or "local-llama"
+        messages=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": code}
+        ]
+    )
+    return response["choices"][0]["message"]["content"]
+
+def save_test_file(content, filename):
+    name = filename.replace(".cpp", "_test.cpp").replace(".h", "_test.cpp")
+    with open(f"tests/{name}", "w") as f:
+        f.write(content)
